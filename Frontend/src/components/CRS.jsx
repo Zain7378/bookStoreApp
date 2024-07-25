@@ -1,11 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Card from './Card';
-import { Navigate, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
+import axios from 'axios';
 function CRS({list}) {
     const navigate = useNavigate();
     const handleBtn = ()=>{
         navigate('/')
     }
+    const [book ,setBook] = useState([]);
+    useEffect(()=>{
+        const getBook = async ()=>{
+            try {
+             let res= await  axios.get('http://localhost:5000/book')
+             console.log(res.data);
+             setBook(res.data);
+            } catch (error) {
+                 console.log('Error :' ,error);
+            }
+        } 
+        getBook();
+       },[])
   return (
     <>
     <div className='max-w-screen-2xl container  dark:bg-slate-900 dark:text-white px-4 md:px-20 mx-auto'>
@@ -22,7 +36,7 @@ function CRS({list}) {
             </div>
         </div>
         <div className='mt-10 grid grid-cols-1 md:grid-cols-4'>
-            {list.map((item)=>(
+            {book.map((item)=>(
                 <Card item={item} />
             ))}
         </div>
